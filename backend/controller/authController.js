@@ -58,28 +58,28 @@ const loginUser = async (request, response) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return response.status(401).json({ error: "No user found" });
+            return response.json({ error: "No user found" });
         }
         
         // Check if password matches
         const match = await comparePassword(password, user.password);
         if (match) {
             // Generate and send a JWT token for successful login
-            jwt.sign({id: user.id, name: user.name, email: user.email }, process.env.JWT_SECRET, {}, (err, token) => {
+            jwt.sign({_id: user.id, name: user.name, email: user.email }, process.env.JWT_SECRET, {}, (err, token) => {
                 if (err) throw err;
                 response.cookie('token', token).json({ success: true, user });
             });
         } else {
-            return response.status(401).json({ error: "Passwords don't match" });
+            return response.json({ error: "Passwords don't match" });
         }
     } catch (error) {
         console.error(error);
-        return response.status(500).json({ error: "Server error" });
+        return response.json({ error: "Server error" });
     }
 };
 
 const getProfile = (request, response) => {
-    const {token} = request.cookies
+    const {token} =  request.cookies
     if(token)
     {
         jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) =>  {

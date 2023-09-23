@@ -32,7 +32,7 @@ const loginUser = async(e) => {
         }
     } catch (error) {
         console.log(error)
-        toast.error("An error occurred while logging in. Please try again.");
+       
     }
     
 

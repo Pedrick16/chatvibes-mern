@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './styles/MainPage.scss'
 import { BsSearch } from 'react-icons/bs';
 import { CgLogOut } from 'react-icons/cg';
@@ -15,6 +15,10 @@ const MainPage = () => {
   const navigate = useNavigate()
   const { user, setUser } = useContext(UserContext)
 
+  
+  console.log(user)
+
+  // useEffect(() => setUser(user || ""), [user]);
 
   const logoutUser = async() => {
     try {
@@ -47,8 +51,9 @@ const MainPage = () => {
             <div className="people-container">
 
                 <img src="" alt="" />
-                <span>{user ? user.name : 'Guest'}</span>
-       
+                <span>Pedrick Divinagracia</span>
+
+           
             
             </div>
              <div className="people-container">
@@ -168,6 +173,7 @@ const MainPage = () => {
 
       <div className="__content">
         <div className="__header-section">
+          <span>{user ? user.name : 'Guest'}</span>
         <CgLogOut onClick={logoutUser} style={{ width: '40px', height: '30px', marginLeft: '5px', cursor:'pointer'  }}/>
 
         </div>
