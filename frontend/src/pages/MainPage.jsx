@@ -63,48 +63,7 @@ const MainPage = () => {
             
             
             </div>
-            <div className="people-container">
-
-                <img src="" alt="" />
-                <span>Pedrick Divinagracia</span>
-       
-            
-            </div>
-             <div className="people-container">
-
-                <img src="" alt="" />
-                <span>Pedrick Divinagracia</span>
-            
-            
-            </div>
-              <div className="people-container">
-
-                <img src="" alt="" />
-                <span>Pedrick Divinagracia</span>
-            
-            
-            </div>
-            <div className="people-container">
-
-                <img src="" alt="" />
-                <span>Pedrick Divinagracia</span>
-       
-            
-            </div>
-             <div className="people-container">
-
-                <img src="" alt="" />
-                <span>Pedrick Divinagracia</span>
-            
-            
-            </div>
-              <div className="people-container">
-
-                <img src="" alt="" />
-                <span>Pedrick Divinagracia</span>
-            
-            
-            </div>
+           
             <div className="people-container">
 
                 <img src="" alt="" />

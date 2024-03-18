@@ -11,7 +11,7 @@ import { UserContextProvider } from "./context/userContext";
 
 
 
-axios.defaults.baseURL = 'https://chatvibes-backend.vercel.app';
+axios.defaults.baseURL = 'http://localhost:8000'
 axios.defaults.withCredentials = true;
 
 
