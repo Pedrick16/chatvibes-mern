@@ -52,31 +52,76 @@ const registerUser = async(request, response) => {
 }
 
 //login end point
-const loginUser = async (request, response) => {
+const loginUser = async (req, res) => {
     try {
-        const { email, password } = request.body;
+        const { email, password } = req.body; // Corrected 'request' to 'req'
         const user = await User.findOne({ email });
 
         if (!user) {
-            return response.json({ error: "No user found" });
+            return res.json({ error: "No user found" }); // Corrected 'response' to 'res'
         }
         
         // Check if password matches
         const match = await comparePassword(password, user.password);
         if (match) {
             // Generate and send a JWT token for successful login
-            jwt.sign({_id: user.id, name: user.name, email: user.email }, process.env.JWT_SECRET, {}, (err, token) => {
-                if (err) throw err;
-                response.cookie('token', token).json({ success: true, user });
-            });
+            const accessToken = jwt.sign({email:email},"jwt-access-token-secret-key", {expiresIn:'1m'})
+            const refreshToken = jwt.sign({email:email},"jwt-refresh-token-secret-key", {expiresIn:'5m'})
+            res.cookie('accessToken', accessToken,{maxAge:60000})
+
+            res.cookie('refreshToken', refreshToken,{maxAge:300000, httpOnly:true, secure:true, sameSite:'strict'})
+            res.json("Login Sucessful") 
+            
         } else {
-            return response.json({ error: "Passwords don't match" });
+            return res.json({ error: "Passwords don't match" });
         }
     } catch (error) {
         console.error(error);
-        return response.json({ error: "Server error" });
+        return res.json({ error: "Server error" });
     }
 };
+
+const verifyUser = (req, res, next) => {
+    const accessToken = req.cookies.accessToken;
+    if(!accessToken){
+       if(renewToken(req, res)){
+            next()
+       }
+    }else{
+        jwt.verify(accessToken, 'jwt-access-token-secret-key', (err,decoded) => {
+            if(err) {
+                return res.json({valid:false, message:"Invalid Token"})
+            } else {
+                req.email = decoded.email
+                next()
+            }
+        })
+    }
+}
+
+const renewToken = (req, res) => {
+    const refreshToken =  req.cookies.refreshToken;
+    let exist = false;
+    if(!refreshToken){
+        return res.json({valid:false, message:"No refresh token"})
+    }else{
+        jwt.verify(refreshToken, 'jwt-refresh-token-secret-key', (err,decoded) => {
+            if(err) {
+                return res.json({valid:false, message:"Invalid refresh Token"})
+            } else {
+
+                const accessToken = jwt.sign({email:decoded.email},"jwt-access-token-secret-key", {expiresIn:'1m'})
+                res.cookie('accessToken', accessToken,{maxAge:60000})
+                exist = true;
+
+                
+               
+            }
+        })
+    }
+    return exist
+    
+}
 
 const getProfile = (request, response) => {
     const {token} =  request.cookies
